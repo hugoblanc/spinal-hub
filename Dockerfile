@@ -4,4 +4,4 @@ WORKDIR /usr/src/app
 COPY . .
 
 EXPOSE 7777
-ENTRYPOINT ["./spinalhub", "-b","/usr/src/app/.browser_organs","-p","7777","-P","7778","-q","7779","-x","bRalJJ107AUv","-w","DIeLZQdKoH5b","-r","KeGttzzkyDDP"]
+CMD ["./spinalhub", "-b","/usr/src/app/.browser_organs","-p","7777","-P","7778","-q","7779","-x","bRalJJ107AUv","-w","DIeLZQdKoH5b","-r","KeGttzzkyDDP"]
