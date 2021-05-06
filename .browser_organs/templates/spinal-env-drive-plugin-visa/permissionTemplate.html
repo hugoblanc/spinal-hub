@@ -1,0 +1,132 @@
+
+<style>
+    .myContainer {
+        /* width: 500px;
+        height: 500px; */
+        padding: 10px;
+    }
+
+    .myContainer .title {
+        text-align: center;
+        font-size: 2em;
+    }
+
+    .dialogContent {
+        height: 90%;
+    }
+
+    .caseCoche {
+        display: inline-block;
+        margin-right: 20px;
+    }
+
+    .autoComplete {
+        border-bottom: 1px solid #747474;
+        margin-bottom: 30px;
+    }
+
+    .autoComplete:focus {
+        border-bottom: 1px solid #ffffff;
+    }
+
+    .myvisaTable {
+        margin-top: 20px;
+    }
+
+    .myvisaTable thead, .myvisaTable tr,.myvisaTable td{
+        height: 30px;
+        padding: 5px; 
+        overflow: hidden;
+        white-space: nowrap;
+        text-overflow: ellipsis;
+        border-bottom: 1px solid #ddd;
+    }
+
+</style>
+
+<md-dialog class="myContainer" aria-label="addLink">
+    <md-dialog-content class="dialogContent">
+        <div class="title">
+            {{title | uppercase}}
+        </div>
+
+        <md-input-container md-no-float class="md-block">
+            <input ng-model="name" placeholder="Nom (4 lettres max)"  />
+        </md-input-container>
+
+        <md-input-container class="md-block">
+            <label>Description</label>
+            <textarea ng-model="description" rows="4" md-select-on-focus></textarea>
+        </md-input-container>
+    
+        <!-- <md-input-container md-no-float class="md-block">
+            <input placeholder="Username">
+        </md-input-container> -->
+
+        <!-- ************************************************************************************************************************* -->
+        <div layout-gt-md="row">
+            
+            <md-chips ng-model="chip_users" md-autocomplete-snap md-transform-chip="transformChip($chip)" md-require-match="true">
+
+                <md-autocomplete  md-selected-item="selectedItem"
+                        md-search-text="searchText"
+                        md-items="item in querySearch(searchText)"
+                        md-item-text="item.name"
+                        placeholder="nom d'utilisateur...">
+                    <span md-highlight-text="searchText">{{item.id}} - {{item.name}}</span>
+                </md-autocomplete>
+
+                <md-chip-template>
+                    <span>
+                    <strong>{{$chip.name}}</strong>
+                    <em>({{$chip.id}})</em>
+                    </span>
+                </md-chip-template>
+
+            </md-chips>
+
+            <md-input-container>
+                <md-button ng-click="addUser()">AJOUTER</md-button>
+            </md-input-container>
+            
+        </div>
+        
+        
+        <!--  *************************************************************************************************************************  -->
+
+
+
+        <table class="myvisaTable" style="width: 100%">
+            <thead>
+                <tr>
+                    <th title="user ID" style="width: 20%" title="id">ID</th>
+                    <th title="Username" style="width: 40%" title="name">Nom d'utilisateur</th>
+                    <th style="width: 20%"></th>        
+                </tr>
+            </thead>
+
+            <tbody>  
+                <tr ng-repeat="user in users track by $index">
+                    <td title="{{user.id}}">{{user.id}}</td>
+                    <td title="{{user.name}}">{{user.name}}</td>
+                    <td>
+                        <md-button ng-click="deleteUser(user.id)" aria-label="deleteUser">
+                            <i class="fa fa-trash" ></i>
+                        </md-button>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+
+    </md-dialog-content>
+
+    <md-dialog-actions layout="row">
+        <md-button ng-click="cancel()">
+        Annuler
+        </md-button>
+        <md-button ng-click="answer()">
+            OK
+        </md-button>
+    </md-dialog-actions>
+
+</md-dialog>

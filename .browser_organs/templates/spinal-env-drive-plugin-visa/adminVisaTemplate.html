@@ -1,0 +1,597 @@
+
+<style>
+
+
+    .visaTable {
+        table-layout: fixed;
+        width: 100%;
+    }
+
+    .visaTable thead {
+        border-bottom: 1px solid #ddd;
+    }
+
+    .visaTable thead, .visaTable tr,.visaTable td{
+        height: 30px;
+        padding: 5px; 
+        overflow: hidden;
+        white-space: nowrap;
+        text-overflow: ellipsis;
+        border-bottom: 1px solid #ddd;
+    }
+
+    .myContainer {
+        width: 100%;
+        height: 100%;
+    }
+
+    .visaCheckbox {
+        /* text-align: center; */
+        padding-top: 15px;
+        text-overflow: clip !important;
+    }
+
+    .myBtn {
+        margin-top: 30px;
+        margin-bottom: 30px;
+    }
+
+    .tableTd {
+        overflow: hidden;
+        white-space: nowrap;
+        text-overflow: ellipsis;
+        padding: 5px;
+    }
+
+    .validOrNot {
+        width: 39%;
+        height: 200px;
+        float: right;
+        
+    }
+
+    .graphStat {
+        width: 60%;
+        min-height: 200px;
+        float: left;
+        border-right: 1px solid #ddd;
+    }
+
+    .md-button.md-altTheme-theme[disabled] > i {
+        /* background-color: rgb(143, 35, 35); */
+        color: gray !important;
+    }
+
+
+    md-nav-bar.md-altTheme-theme .md-button._md-nav-button {
+        color: #ffffff !important;
+    }
+
+    md-nav-bar.md-altTheme-theme .md-button._md-nav-button[disabled] {
+        color: gray !important;
+    }
+
+
+    .sidebar {
+        width: 30%;
+        height: 100%;
+        float: left;
+        margin-top: 20px;
+        border: 1px solid gray;
+    }
+
+    .confContent {
+        width: 69%;
+        min-height: 50%;
+        float: right;
+        margin-top: 20px;
+        padding-left: 20px;
+    }
+
+    .tab_description {
+        font-size: 20px;
+        margin-top: 20px;
+        margin-bottom: 20px;
+        text-align: center;
+        color: gray;
+        border-bottom: 1px solid gray;
+    }
+
+    .tutoNumber {
+        border: 1px solid gray;
+        text-align: center;
+        font-size: 30px;
+        background: gray;
+    }
+
+    .info_detail {
+        width: 100%;
+        height: 30px;
+    }
+
+    .infoName {
+        width: 45%;
+        float: left;
+    }
+
+    .infoResult {
+        width: 55%;
+        float: right;
+    }
+
+</style>
+
+
+<md-content id="myContainer" class="myContainer md-padding" folder-drop folderdrop-events="dropFile">
+
+    <!-- Debut Navbar -->
+    <md-nav-bar md-selected-nav-item="'page' + currentPage" nav-bar-aria-label="navigation links">
+
+        <md-nav-item ng-repeat="tab in myAllTabs"  ng-if="!DisableTab(tab)" md-nav-click="goto($index + 1)" name="page{{$index + 1}}">
+            <i class="fa fa-{{tab.icon.get()}}"></i>
+            &nbsp;
+            {{tab.title.get()}}
+        </md-nav-item>
+
+    </md-nav-bar>
+    <!-- Fin Navbar -->
+
+
+    <!-- Affichage de l'onglet FileList  -->
+    <div class="content" ng-if="currentPage == 1">
+
+        <div class="tab_description">
+            La liste des documents à viser
+        </div>
+
+        <div class="search">
+            <md-input-container class="md-block">
+                <input  ng-model="searchText" placeholder="Rechercher par nom ou lien"/>
+            </md-input-container>
+        </div>
+
+
+        <!-- <md-input-container class="md-block" flex-gt-sm>
+            <label>Item Afficher</label>
+            <md-select ng-model="itemValid">
+              <md-option value="all">Tous les visas</md-option>
+              <md-option value="notValid">Visas rejetés</md-option>
+              <md-option value="valid">Visas Approuvés</md-option>
+            </md-select>
+        </md-input-container>
+
+        <md-input-container class="md-block" flex-gt-sm>
+            <label>Case Affichée</label>
+            <md-select ng-model="boxValid" ng-change="boxChanged(this)">
+                <md-option selected value="allbox">Tous les visas</md-option>
+                <md-option value="validbox">visas Modifiables</md-option>
+                <md-option value="notValidbox">visas non Modifiables</md-option>
+                <md-option value="boxnotValidbox"> visas Rejetés</md-option>
+            </md-select>
+        </md-input-container> -->
+
+
+        
+
+        <div class="table">
+
+            <table class="visaTable" style="width: 100%">
+                <thead>
+                    <tr>
+                        <th style="text-align : center" title="filtrer par validation">
+                            <!-- <md-input-container class="md-block" flex-gt-sm>
+                                <md-select aria-label="filterData" ng-model="filterData">
+                                    <md-option  selected value="all">All</md-option>
+
+                                    <md-option value="times">
+                                        <i style="color: red" class="fa fa-times"></i>
+                                    </md-option>
+
+                                    <md-option value="exclamation">
+                                        <i style="color: red" class="fa fa-exclamation"></i>
+                                    </md-option>
+
+                                    <md-option value="valid">
+                                        <i style="color: green" class="fa fa-check"></i>
+                                    </md-option>
+
+                                    <md-option value="cool">
+                                        <i style="color: blue" class="fa fa-asterisk"></i>
+                                    </md-option>
+                                    
+                                    <md-option value="warning">
+                                        <i style="color: orange" class="fa fa-exclamation-triangle"></i>
+                                    </md-option>
+
+                                </md-select>
+                            </md-input-container> -->
+
+                            <md-menu>
+                                <md-button class="md-icon-button" aria-label="choose item" ng-click="$mdOpenMenu()" style="text-align: left">
+                                    <i ng-style="{color : getFilterIcon(filterData)['color']}" class="fa fa-{{getFilterIcon(filterData)['name']}}"></i>
+                                    <i class="fa fa-angle-down"></i>
+                                </md-button>
+
+                                <md-menu-content>
+                                    <md-menu-item>
+                                        <md-button ng-click="getFilterIcon('all')">
+                                            <i style="color: white" class="fa fa-cube"></i>
+                                            &nbsp;
+                                            Tous les visas
+                                        </md-button>
+                                    </md-menu-item>
+
+                                    <md-menu-item>
+                                        <md-button ng-click="getFilterIcon('warning')">
+                                            <i style="color: orange" class="fa fa-exclamation-triangle"></i>
+                                            &nbsp;
+                                            Prioritaires
+                                        </md-button>
+                                    </md-menu-item>
+
+                                    <md-menu-item>
+                                        <md-button ng-click="getFilterIcon('times')">
+                                            <i style="color: red" class="fa fa-times"></i>
+                                            &nbsp;
+                                            Rejetés
+                                        </md-button>     
+                                    </md-menu-item>
+
+                                    <md-menu-item>
+                                        <md-button ng-click="getFilterIcon('valid')">
+                                            <i style="color: green" class="fa fa-check"></i>
+                                            &nbsp;
+                                            Approuvés
+                                        </md-button>                                        
+                                    </md-menu-item>
+    
+                                    <md-menu-item>
+                                        <md-button ng-click="getFilterIcon('cool')">
+                                            <i style="color: blue" class="fa fa-asterisk"></i>
+                                            &nbsp;
+                                            Encours de Traitement
+                                        </md-button>                                        
+                                    </md-menu-item>
+        
+                                    <md-menu-item>
+                                        <md-button ng-click="getFilterIcon('exclamation')">
+                                            <i style="color: red" class="fa fa-exclamation"></i>
+                                            &nbsp;
+                                            Date limite depassée
+                                        </md-button>    
+                                    </md-menu-item>
+            
+                                                            
+
+                                </md-menu-content>
+
+                            </md-menu>
+
+                        </th>
+                        <th class="tableTd"  title="Nom">Nom</th>
+                        <th class="tableTd"  title="Chemin">Dossier</th>
+                        <!-- <th class="tableTd"  title="Description">Description</th> -->
+
+                        <th class="tableTd" style="max-width: 70px;" ng-if="myAllCases.length > 0" ng-repeat="case in myAllCases track by $index" title="{{case.description.get()}}" id="0" > <!-- ng-click="sortByValidation($event,case)" -->
+                            {{case.name.get() | uppercase}}
+                            <!-- <i class="fa fa-sort"></i> -->
+                        </th>
+
+                        <!-- <th class="tableTd"  title="Date de creation">Date de Creation</th> -->
+                        <th class="tableTd"  title="Date limite de validation">Date Limite</th>
+                        <th class="tableTd"  title="Pourcentage de validation">%</th>
+                        <th style="width: 50px;"></th>
+                        <th style="width: 50px;"></th>
+                    </tr>
+                </thead>
+
+                <tbody>
+                    <tr ng-repeat="item in allItems | searchFilter:searchText | displayFilter:itemValid | itemFilter:filterData  track by $index">
+                        <td style="text-align : center" title="{{getDateInfo(item)['message']}} ">
+                            <i ng-style="{'color' : getDateInfo(item)['color']}" class="{{getDateInfo(item)['icon']}}"></i>
+                        </td>
+
+                        <td title="{{item.name.get()}}" class="tableTd">{{item.name.get()}}</td>
+                        <td title="{{item._info.visaValidation.path.get()}}" class="tableTd">{{item._info.visaValidation.path.get()}}</td>
+                        <!-- <td title="{{item._info.visaValidation.message.get()}}" class="tableTd">{{item._info.visaValidation.message.get()}}</td> -->
+
+                        <td class="visaCheckbox" ng-if="item._info.visaValidation.validation.length > 0" ng-repeat="j in item._info.visaValidation.validation track by $index">
+                            <!-- <md-checkbox  aria-label="checkbox" ng-disabled="!j.canBeChecked.get() || !userCanCheck(j)" ng-model="checkbox" ng-checked="j.valid.get()" ng-click="checkCase(j._server_id,item._info.visaValidation)"></md-checkbox> -->
+                            <!-- <md-checkbox aria-label="checkbox" ng-if="canBeDisplay(j)" ng-disabled="!j.canBeChecked.get() || !userCanCheck(j)" ng-model="checkbox" ng-checked="j.valid.get()" ng-click="checkCase(j._server_id,item._info.visaValidation)"></md-checkbox> -->
+                            <!-- {{canBeDisplay(j)}} -->
+
+                            <!-- <md-input-container ng-if="canBeDisplay(j)">
+                                <md-select aria-label="checkbox" style="text-align: center" ng-disabled="!j.canBeChecked.get() || !userCanCheck(j)" ng-model="checkbox" ng-change="checkCase(j._server_id,item._info.visaValidation,checkbox)">
+                                 
+                                  <md-option ng-selected="j.valid.get() == -1" value="{{-1}}">
+                                        <i style="color: blue" class="fa fa-asterisk"></i>
+                                  </md-option>
+                                    
+                                  <md-option ng-selected="j.valid.get() == 0" value="{{0}}">
+                                    <i style="color: red" class="fa fa-times-circle"></i>
+                                  </md-option>
+
+                                  <md-option ng-selected="j.valid.get() == 1"  value="{{1}}">
+                                    <i style="color: green" class="fa fa-check-square"></i>
+                                  </md-option>
+
+                                </md-select>
+                            </md-input-container> -->
+
+                            <md-menu>
+                                <md-button class="md-icon-button" aria-label="choose item" ng-disabled="!j.canBeChecked.get() || !userCanCheck(j)" title="{{!j.canBeChecked.get() || !userCanCheck(j) ? 'Vous ne pouvez pas modifier cette case': getValidationIcon(j)['title'] }}" ng-click="$mdOpenMenu()" style="text-align: left">
+                                    <i ng-style="{color : getValidationIcon(j)['color']}" class="fa fa-{{getValidationIcon(j)['name']}}"></i>
+                                </md-button>
+
+                                <md-menu-content>
+                                    <md-menu-item>
+                                        <md-button ng-click="checkCase(j._server_id,item._info.visaValidation,-1)">
+                                            <i style="color: blue" class="fa fa-asterisk"></i>
+                                            À Traiter
+                                        </md-button>
+                                    </md-menu-item>
+
+                                    <md-menu-item>
+                                        <md-button ng-click="checkCase(j._server_id,item._info.visaValidation,0)">
+                                            <i style="color: red" class="fa fa-times-circle"></i>
+                                            Rejeter
+                                        </md-button>
+                                    </md-menu-item>
+
+                                    <md-menu-item>
+                                        <md-button ng-click="checkCase(j._server_id,item._info.visaValidation,1)">
+                                            <i style="color: green" class="fa fa-check-square"></i>
+                                            Approuver
+                                        </md-button>
+                                    </md-menu-item>
+                                </md-menu-content>
+
+                            </md-menu>
+
+
+                        </td>
+                        
+                        <!-- <td title="{{item._info.visaValidation.date.get() | date}}" class="tableTd">{{item._info.visaValidation.date.get() | date}}</td> -->
+
+                        <td title="{{item._info.visaValidation.validate_before.get() | date}}" class="tableTd">{{item._info.visaValidation.validate_before.get() | date}}</td>
+
+                        <td title="{{item._info.visaValidation.isValid.get()}} %" class="tableTd">
+                            {{item._info.visaValidation.isValid.get()}} %
+                        </td>
+
+                        <td>
+                            <md-button class="md-icon-button" aria-label="Info">
+                                
+                                <i class="fa fa-info">
+                                    <md-tooltip md-direction="left" style="min-height : 100px;min-width: 200px;">
+                                        <div class="info_detail">
+                                            <div class="infoName">Nom : </div>
+                                            <div class="infoResult">{{item.name.get()}}</div>
+                                        </div>
+
+                                        <div class="info_detail">
+                                            <div class="infoName">Date de creation : </div>
+                                            <div class="infoResult">{{item._info.visaValidation.date.get() | date}}</div>
+                                        </div>
+
+                                        <div class="info_detail">
+                                            <div class="infoName">Description : </div>
+                                            <div class="infoResult">{{item._info.visaValidation.message.get()}}</div>
+                                        </div>
+
+                                    </md-tooltip>
+                                </i>
+                            </md-button>
+                        </td>
+
+                        <td style="text-align : center" title="menu">
+                            <md-menu>
+                                <md-button aria-label="open menu" class="md-icon-button" ng-click="$mdOpenMenu()">
+                                    <i class="fa fa-ellipsis-v"></i>
+                                </md-button>
+                                <md-menu-content width="4">
+                                    <md-menu-item ng-repeat="tableMenu in tableMenuContent">
+                                        <md-button ng-click="menuItemSelected(tableMenu,item,$event)">
+                                            <i class="fa fa-{{tableMenu.icon}}"></i>
+                                            &nbsp;
+                                            {{tableMenu.name}}
+                                        </md-button>
+                                    </md-menu-item>
+                                </md-menu-content>
+                            </md-menu>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+
+        </div>
+    </div>
+
+    <!-- Fin de l'affichage de l'onglet FileList  -->
+
+
+    <!-- Affichage de l'onglet Folder Organization -->
+    <div class="content" ng-if="currentPage == 2">
+        <div class="tab_description">
+            Configuration des dossiers
+        </div>
+
+        <folder-organization tree-plugins="contextmenu,dnd"
+        tree-contextmenu="contextMenu"
+        disableSelect-contextmenu
+        tree-data="scope"
+        tree-model="fsdir"
+        tree-core="treeCore"
+        tree-events="select_node:onChangeNodeTree;open_node:onChangeNodeTree;close_node:onChangeNodeTree"
+        tree-binds="dblclick.jstree:onbdlclick"></folder-organization>
+    </div>
+    <!-- fin de l'affichage de l'onglet Folder Organization -->
+
+
+    <!-- Affichage de l'onglet Validation Item -->
+    <div class="content" ng-if="currentPage == 3">
+
+        <div class="tab_description">
+            Configuration des visas 
+        </div>
+
+        <md-button class="myBtn md-raised" ng-click="editFileInfo($event)">
+            <i class="fa fa-plus"></i>
+            Ajouter un visa
+        </md-button>
+
+        <div class="table">
+
+            <table class="visaTable" style="width: 100%">
+                <thead>
+                    <tr>
+                        <th style="width: 20%" title="name">Nom</th>
+                        <th style="width: 40%" title="Path">Desription</th>
+                        <th style="width: 20%" title="Permission">Permission</th>
+                        <th style="width: 20%"></th>   
+                        <th style="width: 20%"></th>     
+                    </tr>
+                </thead>
+
+                <tbody>  
+                    <tr ng-if="myAllCases.length > 0" ng-repeat="myCase in myAllCases track by $index">
+                        <td>{{myCase.name}}</td>
+                        <td>{{myCase.description}}</td>
+                        <td>{{displayAllUsers(myCase.users)}}</td>
+                        <td>
+                            <md-button aria-label="edit" ng-click="editFileInfo($event,myCase)">
+                                <i class="fa fa-pencil"></i>
+                            </md-button>
+                        </td>
+                        <td>
+                            <md-button aria-label="delete" ng-click="deleteValidationCase(myCase)">
+                                <i class="fa fa-trash"></i>
+                            </md-button>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+
+
+        </div>
+    </div>
+    <!-- fin de l'affichage de l'onglet Validation Item -->
+
+
+
+    <!-- Affichage de l'onglet Graph -->
+    <div class="content" ng-if="currentPage == 4">
+
+        <div class="tab_description">
+            Dashboard
+        </div>
+
+        <div class="graphStat">
+            <h4>Taux (%) de validation de documents par typologie de visa</h4>
+            <canvas id="myStat" width="100%" height="90%" case-progress-directive></canvas>
+        </div>
+
+        <div class="validOrNot">
+            <h4>Taux (%) de validation des documents </h4>
+            <canvas id="myChart" width="100%" height="90%" chart-directive></canvas>
+        </div>
+    </div>
+    <!-- Fin de l'affichage de l'onglet Graph -->
+
+
+    <!-- Affichage de l'onglet Manager -->
+    <div class="content" ng-if="currentPage == 5">
+
+        <div class="tab_description">
+            Gestion des droits des onglets 
+        </div>
+
+
+        <div class="sidebar">
+
+            <md-list>
+                <md-list-item ng-repeat="tab in myAllTabs" ng-if="!tab.all.get()" ng-click="configureTab(tab)">
+                    <p> {{ tab.title.get() | uppercase }} </p>
+                </md-list-item>
+            </md-list>
+
+        </div>
+
+        <div class="confContent">
+
+            <div ng-if="!tabSelected">
+                <h4>Selectionnez un onglet</h4>
+            </div>
+
+            <div ng-if="tabSelected.all.get()">
+                <div style="text-align: center;margin-top: 30px">
+                    <h3>{{tabSelected.title.get() | uppercase}}</h3>
+                </div>
+
+                <h4>Cet onglet est public</h4>
+            </div>
+
+            <div ng-if="tabSelected && !tabSelected.all.get()">
+                <div style="text-align: center;margin-top: 30px">
+                    <h3>{{tabSelected.title.get() | uppercase}}</h3>
+                </div>
+
+                
+                <div class="search">
+                    <md-input-container class="md-block">
+                        <input  ng-model="searchUser" placeholder="Nom de l'utilisateur"/>
+                    </md-input-container>
+                </div>
+
+                
+                <table style="width: 100%;margin-top: 20px;">
+                    <thead>
+                        <tr>
+                            <th title="ID" style="width: 20%">ID</th>
+                            <th title="Nom d'utilisateur" style="width: 40%">Nom d'utilisateur</th>
+                            <th style="width: 20%">
+                                Permission
+                            </th>
+                        </tr>
+                    </thead>
+                    <tbody style="border-top: 1px solid #ffffff;">
+                        <tr ng-repeat="user in _allUsers | filter:searchUser">
+                            <td>{{user.id}}</td>
+                            <td>{{user.name}}</td>
+                            <td style="padding-top: 5px;">
+                                <md-checkbox class="md-primary" ng-checked="userHasPermission(user)"  ng-model="_x" ng-click="modifyUserPermission(user)" aria-label="givePermission" ></md-checkbox>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+                
+            </div>
+        </div>
+    </div>
+    <!-- Fin de l'affichage de l'onglet Manager -->
+
+    <div class="content" ng-if="currentPage == 6">
+        <div class="tab_description">
+            Tutoriel de configuration 
+        </div>
+
+        <md-list>
+
+            <md-list-item ng-repeat="tuto in tutorials">
+                <div class="tutoNumber md-avatar">
+                    {{tuto.number}}
+                </div>
+
+                <div class="md-list-item-text">
+                    <h2 style="color: gray">{{tuto.title}}</h2>
+                    <p>
+                        {{tuto.description}}
+                    </p>
+                </div>
+            </md-list-item>
+
+        </md-list>
+
+    </div>
+
+</md-content>
